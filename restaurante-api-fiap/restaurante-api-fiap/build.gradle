@@ -19,13 +19,13 @@ repositories {
 }
 
 dependencies {
-    //JPA
+    // JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    //validation
+    // validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-    //web
+    // web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-    //postgreSql
+    // postgreSql
 	runtimeOnly 'org.postgresql:postgresql'
     implementation 'com.vladmihalcea:hibernate-types-60:2.21.1'
     // Swagger / OpenAPI
@@ -35,6 +35,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.32'
     testCompileOnly 'org.projectlombok:lombok:1.18.32'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
+    // MapStruct
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

@@ -1,11 +1,10 @@
 package com.nickjunior.restaurante_api_fiap.Restaurante.Entity;
 
-import com.nickjunior.restaurante_api_fiap.Usuarios.Entity.DonoEntity;
+import com.nickjunior.restaurante_api_fiap.Usuarios.Entity.UsuarioEntity;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
@@ -43,7 +42,7 @@ public class RestaurantEntity {
     private LocalDateTime dataUltimaAlteracao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dono_id")
-    private DonoEntity dono;
+    @JoinColumn(name = "usuario_id")
+    private UsuarioEntity usuarioDono;
 
 }

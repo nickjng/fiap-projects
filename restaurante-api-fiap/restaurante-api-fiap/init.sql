@@ -1,24 +1,15 @@
 CREATE TABLE IF NOT EXISTS usuarios (
     usuario_id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
+    endereco VARCHAR(255),
     email VARCHAR(255) UNIQUE NOT NULL,
     login VARCHAR(100) NOT NULL,
     senha VARCHAR(255) NOT NULL,
-    tipo VARCHAR(20) NOT NULL CHECK (tipo IN ('CLIENTE', 'DONO')),
-    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    data_ultima_alteracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS clientes (
-    usuario_id BIGINT PRIMARY KEY,
+    tipo_usuario VARCHAR(20) NOT NULL CHECK (tipo_usuario IN ('CLIENTE', 'DONO')),
     restaurantes_favoritados JSONB DEFAULT '[]',
     restaurantes_avaliados JSONB DEFAULT '[]',
-    CONSTRAINT fk_clientes_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS donos_restaurante (
-    usuario_id BIGINT PRIMARY KEY,
-    CONSTRAINT fk_donos_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id) ON DELETE CASCADE
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_ultima_alteracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS restaurantes (
@@ -34,7 +25,7 @@ CREATE TABLE IF NOT EXISTS restaurantes (
     }',
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_ultima_alteracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (dono_id) REFERENCES donos_restaurante(dono_id) ON DELETE CASCADE
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS enderecos (
