@@ -1,5 +1,6 @@
 package com.nickjunior.restaurante_api_fiap.Usuarios.Controller;
 
+import com.nickjunior.restaurante_api_fiap.Auth.Service.AuthServiceImpl;
 import com.nickjunior.restaurante_api_fiap.Usuarios.Objetcs.dao.UsuarioDAO;
 import com.nickjunior.restaurante_api_fiap.Usuarios.Objetcs.dto.UsuarioDTO;
 import com.nickjunior.restaurante_api_fiap.Usuarios.Service.UsuarioServiceImpl;
@@ -17,6 +18,9 @@ public class UsuarioController {
     @Autowired
     private UsuarioServiceImpl usuarioServiceImpl;
 
+    @Autowired
+    private AuthServiceImpl authService;
+
 
     @PostMapping()
     public ResponseEntity<UsuarioDTO> cadastrarUsuario(@RequestBody UsuarioDAO userRequest){
@@ -25,8 +29,8 @@ public class UsuarioController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<UsuarioDTO>> listarUsuarios(){
-        List<UsuarioDTO> listaUsuarios = usuarioServiceImpl.listarUsuarios();
+    public ResponseEntity<List<UsuarioDTO>> listarUsuarios(@RequestParam(name = "nome",required = false) String buscarPor){
+        List<UsuarioDTO> listaUsuarios = usuarioServiceImpl.listarUsuarios(buscarPor);
         return ResponseEntity.status(200).body(listaUsuarios);
     }
 
@@ -36,15 +40,15 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioBuscado);
     }
 
-    @PatchMapping("/{idUsuario}")
-    public ResponseEntity<UsuarioDTO> atualizarUsuario(@RequestBody UsuarioDAO userPatch, @PathVariable Long idUsuario){
-        UsuarioDTO usuarioAtualizado = usuarioServiceImpl.atualizarUsuario(userPatch, idUsuario);
+    @PatchMapping("/atualizar-dados")
+    public ResponseEntity<UsuarioDTO> atualizarUsuario(@RequestBody UsuarioDAO userPatch,  @RequestHeader("Autrorization") String token){
+        UsuarioDTO usuarioAtualizado = usuarioServiceImpl.atualizarUsuario(userPatch, authService.getUsuarioFromToken(token));
         return ResponseEntity.status(204).body(usuarioAtualizado);
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deletarConta(@PathVariable Long idUsuario){
-        return ResponseEntity.status(204).body(usuarioServiceImpl.deletarConta(idUsuario));
+    public ResponseEntity<String> deletarConta( @RequestHeader("Authorization") String token){
+        return ResponseEntity.status(204).body(usuarioServiceImpl.deletarConta(authService.getUsuarioFromToken(token)));
     }
 
 

@@ -9,10 +9,5 @@ import java.util.Map;
 public record RestauranteDAO(
         String nome,
         String descricao,
-        LocalDate dataInauguracao,
-        Map<String, Object>dadosRestaurante,
-        LocalDateTime dataCriacao,
-        LocalDateTime dataUltimaAlteracao,
-        UsuarioEntity usuarioDono
-) {
-}
+        LocalDate dataInauguracao
+) {}

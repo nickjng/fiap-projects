@@ -9,6 +9,7 @@ import com.nickjunior.restaurante_api_fiap.Restaurante.mapper.RestaurantMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,6 +29,9 @@ public class DonoServiceImpl implements DonoService {
     @Override
     public RestauranteDTO cadastrarRestaurante(DonoEntity donoRestaurante, RestauranteDAO restauranteRequest) {
         RestaurantEntity novoRestaurante = restaurantMapper.toEntity(restauranteRequest);
+        novoRestaurante.setUsuarioDono(donoRestaurante);
+        novoRestaurante.setDataCriacao(LocalDateTime.now());
+        novoRestaurante.setDataUltimaAlteracao(LocalDateTime.now());
         return restaurantMapper.toResponse(restaurantRepository.save(novoRestaurante));
     }
 

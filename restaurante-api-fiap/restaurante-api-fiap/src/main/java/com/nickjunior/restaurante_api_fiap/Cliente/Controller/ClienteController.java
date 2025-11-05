@@ -3,6 +3,7 @@ package com.nickjunior.restaurante_api_fiap.Cliente.Controller;
 import com.nickjunior.restaurante_api_fiap.Auth.Service.AuthServiceImpl;
 import com.nickjunior.restaurante_api_fiap.Cliente.Entity.ClienteEntity;
 import com.nickjunior.restaurante_api_fiap.Cliente.Service.ClienteServiceImpl;
+import com.nickjunior.restaurante_api_fiap.Restaurante.Objects.dto.RestauranteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,20 +24,20 @@ public class ClienteController {
 
     @PostMapping("/favoritar/{restauranteId}")
     public ResponseEntity<String> favoritarRestaurante(@PathVariable Long restauranteId,
-                                                       @RequestHeader("Autrorization") String token){
+                                                       @RequestHeader("Authorization") String token){
         clienteService.favoritarRestaurante(restauranteId, (ClienteEntity) authServiceImpl.getUsuarioFromToken(token));
         return ResponseEntity.ok("Restaurante favoritado");
     }
 
     @PostMapping("/desfavoritar/{restauranteId}")
     public ResponseEntity<String> desfavoritarRestaurante(@PathVariable Long restauranteId,
-                                                       @RequestHeader("Autrorization") String token){
+                                                       @RequestHeader("Authorization") String token){
         clienteService.desfavoritarRestaurante(restauranteId, (ClienteEntity) authServiceImpl.getUsuarioFromToken(token));
-        return ResponseEntity.ok("Restaurante favoritado");
+        return ResponseEntity.ok("Restaurante desfavoritado");
     }
 
     @GetMapping("/favoritos")
-    public ResponseEntity<List<Long>> listarFavoritos(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<RestauranteDTO>> listarFavoritos(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(clienteService.listarFavoritos((ClienteEntity) authServiceImpl.getUsuarioFromToken(token)));
     }
 
@@ -44,10 +45,9 @@ public class ClienteController {
     public ResponseEntity<String> avaliarRestaurante(
             @RequestHeader("Authorization") String token,
             @PathVariable Long restauranteId,
-            @RequestParam Integer nota,
-            @RequestParam String comentario) {
+            @RequestBody Map<String, Object> avaliacaoData) {
 
-        clienteService.avaliarRestaurante(restauranteId,(ClienteEntity) authServiceImpl.getUsuarioFromToken(token), nota, comentario);
+        clienteService.avaliarRestaurante(restauranteId,(ClienteEntity) authServiceImpl.getUsuarioFromToken(token), avaliacaoData);
         return ResponseEntity.ok("Avaliação registrada!");
     }
 

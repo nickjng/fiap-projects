@@ -2,7 +2,9 @@ package com.nickjunior.restaurante_api_fiap.Cliente.Service;
 
 import com.nickjunior.restaurante_api_fiap.Cliente.Entity.ClienteEntity;
 import com.nickjunior.restaurante_api_fiap.Restaurante.Entity.RestaurantEntity;
+import com.nickjunior.restaurante_api_fiap.Restaurante.Objects.dto.RestauranteDTO;
 import com.nickjunior.restaurante_api_fiap.Restaurante.Repository.RestaurantRepository;
+import com.nickjunior.restaurante_api_fiap.Restaurante.mapper.RestaurantMapper;
 import com.nickjunior.restaurante_api_fiap.Usuarios.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,14 @@ public class ClienteServiceImpl implements ClienteService {
     private RestaurantRepository restaurantRepository;
 
     @Autowired
+    private RestaurantMapper restaurantMapper;
+
+    @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public ClienteServiceImpl(RestaurantRepository restaurantRepository, UsuarioRepository usuarioRepository) {
+    public ClienteServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, UsuarioRepository usuarioRepository) {
         this.restaurantRepository = restaurantRepository;
+        this.restaurantMapper = restaurantMapper;
         this.usuarioRepository = usuarioRepository;
     }
 
@@ -60,17 +66,18 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public List<Long> listarFavoritos(ClienteEntity cliente) {
-        return cliente.getRestaurantesFavoritados() != null ?
-                cliente.getRestaurantesFavoritados() :
-                Collections.emptyList();
+    public List<RestauranteDTO> listarFavoritos(ClienteEntity cliente) {
+        if (cliente.getRestaurantesFavoritados() == null || cliente.getRestaurantesFavoritados().isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<RestaurantEntity> restaurantes = restaurantRepository.findAllById(cliente.getRestaurantesFavoritados());
+        return restaurantes.stream()
+                .map(restaurantMapper::toResponse)
+                .toList();
     }
 
     @Override
-    public void avaliarRestaurante(Long restauranteId, ClienteEntity cliente, Integer nota, String comentario) {
-        if (nota < 1 || nota > 5) {
-            throw new RuntimeException("Nota deve ser entre 1 e 5");
-        }
+    public void avaliarRestaurante(Long restauranteId, ClienteEntity cliente, Map<String, Object> avaliacaoData) {
 
         RestaurantEntity restaurante = restaurantRepository.findById(restauranteId)
                 .orElseThrow(() -> new RuntimeException("Restaurante não encontrado"));
@@ -81,10 +88,12 @@ public class ClienteServiceImpl implements ClienteService {
 
         Map<String, Object> avaliacao = new HashMap<>();
         avaliacao.put("restauranteId", restauranteId);
-        avaliacao.put("nota", nota);
-        avaliacao.put("comentario", comentario != null ? comentario : "");
-        avaliacao.put("dataAvaliacao", LocalDateTime.now());
+        avaliacao.put("restauranteNome", restaurante.getNome());
+        avaliacao.put("dataAvaliacao", LocalDateTime.now().toString());
+        avaliacao.put("clienteId", cliente.getId());
         avaliacao.put("clienteNome", cliente.getNome());
+
+        avaliacao.putAll(avaliacaoData);
 
         cliente.getRestaurantesAvaliados().add(avaliacao);
         usuarioRepository.save(cliente);
@@ -94,7 +103,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public List<Map<String, Object>> listarAvaliacoes(ClienteEntity cliente) {
         return cliente.getRestaurantesAvaliados() != null ?
-                cliente.getRestaurantesAvaliados() :
+                new ArrayList<>(cliente.getRestaurantesAvaliados()) :
                 Collections.emptyList();
     }
 }

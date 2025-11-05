@@ -1,15 +1,12 @@
 package com.nickjunior.restaurante_api_fiap.Restaurante.Entity;
 
 import com.nickjunior.restaurante_api_fiap.Usuarios.Entity.UsuarioEntity;
-import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -30,10 +27,6 @@ public class RestaurantEntity {
 
     @Column(name = "data_inauguracao")
     private LocalDate dataInauguracao;
-
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    private Map<String, Object> dadosRestaurante;
 
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;

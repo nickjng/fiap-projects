@@ -1,5 +1,6 @@
 package com.nickjunior.restaurante_api_fiap.Usuarios.Service;
 
+import com.nickjunior.restaurante_api_fiap.Auth.Service.AuthServiceImpl;
 import com.nickjunior.restaurante_api_fiap.Usuarios.Entity.UsuarioEntity;
 import com.nickjunior.restaurante_api_fiap.Usuarios.Objetcs.dao.UsuarioDAO;
 import com.nickjunior.restaurante_api_fiap.Usuarios.Objetcs.dto.UsuarioDTO;
@@ -12,6 +13,9 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +36,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioDTO cadastrarUsuario(UsuarioDAO usuarioRequest) {
+
+        if (!isEmailValido(usuarioRequest.email())) {
+            throw new RuntimeException("Email inválido");
+        }
+
         Boolean userExist = usuarioRepository.existsByEmail(usuarioRequest.email());
 
         if(userExist){
@@ -42,15 +51,17 @@ public class UsuarioServiceImpl implements UsuarioService {
                 usuarioMapper.toClienteEntity(usuarioRequest) :
                 usuarioMapper.toDonoEntity(usuarioRequest);
 
-        if(usuarioRequest.tipo() == TipoUsuario.CLIENTE){
-            novoUsuario =  usuarioMapper.toClienteEntity(usuarioRequest);
-        }
+        String senhaBase64 = Base64.getEncoder().encodeToString(usuarioRequest.senha().getBytes());
+        novoUsuario.setSenha(senhaBase64);
+        novoUsuario.setDataCriacao(LocalDateTime.now());
+        novoUsuario.setDataUltimaAlteracao(LocalDateTime.now());
         return usuarioMapper.toResponse(usuarioRepository.save(novoUsuario));
     }
 
     @Override
-    public List<UsuarioDTO> listarUsuarios() {
-        List<UsuarioEntity> usuarios = usuarioRepository.findAll();
+    public List<UsuarioDTO> listarUsuarios(String termo) {
+        List<UsuarioEntity> usuarios = termo == null ?  usuarioRepository.findAll() :
+                usuarioRepository.buscarPorQualquerDado(termo.trim());
         return usuarios.stream()
                 .map(usuarioMapper::toResponse)
                 .toList();
@@ -64,32 +75,32 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioDTO atualizarUsuario(UsuarioDAO userPatch, Long idUsuario) {
-        UsuarioEntity usuarioEncontrado = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + idUsuario));
+    public UsuarioDTO atualizarUsuario(UsuarioDAO userPatch, UsuarioEntity usuario) {
 
-        BeanUtils.copyProperties(userPatch, usuarioEncontrado, getNullPropertyNames(userPatch));
+        BeanUtils.copyProperties(userPatch, usuario, getNullPropertyNames(userPatch));
 
-        if (userPatch.email() != null && !usuarioEncontrado.getEmail().equals(userPatch.email())) {
+        if (userPatch.email() != null && !usuario.getEmail().equals(userPatch.email())) {
             if (usuarioRepository.existsByEmail(userPatch.email())) {
                 throw new RuntimeException("Email já está em uso");
             }
         }
 
-        UsuarioEntity usuarioAtualizado = usuarioRepository.save(usuarioEncontrado);
+        if(userPatch.senha() != null && !usuario.getSenha().equals(userPatch.senha())){
+            String senhaBase64 = Base64.getEncoder().encodeToString(userPatch.senha().getBytes());
+            usuario.setSenha(senhaBase64);
+        }
+
+        UsuarioEntity usuarioAtualizado = usuarioRepository.save(usuario);
         return usuarioMapper.toResponse(usuarioAtualizado);
     }
 
     @Override
-    public String deletarConta(Long idUsuario) {
-        if (!usuarioRepository.existsById(Long.valueOf(idUsuario))) {
-            throw new RuntimeException("Usuário não encontrado com ID: " + idUsuario);
-        }
-        usuarioRepository.deleteById(Long.valueOf(idUsuario));
+    public String deletarConta(UsuarioEntity usuario) {
+        usuarioRepository.delete(usuario);
         return "Usuário deletado com sucesso!";
     }
 
-    public String[] getNullPropertyNames(UsuarioDAO source) {
+    private String[] getNullPropertyNames(UsuarioDAO source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
         java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
 
@@ -101,6 +112,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
+    }
+
+    private boolean isEmailValido(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        return email != null && email.matches(regex);
     }
 
 }

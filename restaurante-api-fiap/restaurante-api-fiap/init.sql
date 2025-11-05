@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
     tipo_usuario VARCHAR(20) NOT NULL CHECK (tipo_usuario IN ('CLIENTE', 'DONO')),
     restaurantes_favoritados JSONB DEFAULT '[]',
     restaurantes_avaliados JSONB DEFAULT '[]',
-    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    data_ultima_alteracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    data_criacao TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+    data_ultima_alteracao TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS restaurantes (
@@ -18,11 +18,6 @@ CREATE TABLE IF NOT EXISTS restaurantes (
     descricao TEXT NOT NULL,
     data_inauguracao DATE,
     dono_id BIGINT NOT NULL,
-    dados_restaurante JSONB DEFAULT '{
-        "avaliacao_media": 0,
-        "total_avaliacoes": 0,
-        "faixa_preco": "medio"
-    }',
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_ultima_alteracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id) ON DELETE CASCADE

@@ -31,7 +31,7 @@ public class DonoController {
     public ResponseEntity<RestauranteDTO> cadastrarRestaurante(
             @RequestBody RestauranteDAO restauranteRequest,
             @RequestHeader("Authorization") String token){
-        return ResponseEntity.status(202)
+        return ResponseEntity.status(201)
                 .body(donoService.cadastrarRestaurante(
                         (DonoEntity) authService.getUsuarioFromToken(token), restauranteRequest));
     }

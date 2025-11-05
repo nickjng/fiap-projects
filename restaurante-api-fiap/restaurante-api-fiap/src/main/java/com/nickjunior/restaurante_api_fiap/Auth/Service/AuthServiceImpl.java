@@ -11,6 +11,7 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.Date;
 
 @Service
@@ -29,11 +30,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginDTO login(LoginDAO request) {
+
         UsuarioEntity usuario = usuarioRepository.findByEmail(request.login())
                 .orElseThrow(() -> new RuntimeException("e-mail inválido"));
 
-        if(!usuario.getSenha().equals(request.senha())){
-            throw new RuntimeException();
+        String senhaDoBancoDecodificada = new String(Base64.getDecoder().decode(usuario.getSenha()));
+        if(!request.senha().equals(senhaDoBancoDecodificada)){
+            throw new RuntimeException("Senha invalida");
         }
 
         String token = gerarToken(usuario);
@@ -60,6 +63,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Long validarToken(String token) {
         try {
+            if (token != null && token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
             return Long.parseLong(
                     Jwts.parserBuilder()
                             .setSigningKey(jwtConfig.getSecretKey())
