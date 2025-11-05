@@ -41,7 +41,7 @@ public class UsuarioController {
     }
 
     @PatchMapping("/atualizar-dados")
-    public ResponseEntity<UsuarioDTO> atualizarUsuario(@RequestBody UsuarioDAO userPatch,  @RequestHeader("Autrorization") String token){
+    public ResponseEntity<UsuarioDTO> atualizarUsuario(@RequestBody UsuarioDAO userPatch,  @RequestHeader("Authorization") String token){
         UsuarioDTO usuarioAtualizado = usuarioServiceImpl.atualizarUsuario(userPatch, authService.getUsuarioFromToken(token));
         return ResponseEntity.status(204).body(usuarioAtualizado);
     }
