@@ -1,0 +1,450 @@
+{
+	"info": {
+		"_postman_id": "f75af753-500c-4925-b6c7-6d3bcc2ad89d",
+		"name": "FIAP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36000072"
+	},
+	"item": [
+		{
+			"name": "Usuario",
+			"item": [
+				{
+					"name": "ListarUsuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/usuarios",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar por nome",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/usuarios?nome=Nick",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuarios"
+							],
+							"query": [
+								{
+									"key": "nome",
+									"value": "Nick"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BuscarUsuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/usuarios/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuarios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Hellen\",\r\n  \"endereco\": \"Rua arajipe 104, Jardim Aricanduva\",\r\n  \"email\": \"hellen.ng@outlook.com\",\r\n  \"login\": \"nickjng\",\r\n  \"senha\": \"12345\",\r\n  \"tipo\": \"DONO\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/usuarios",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwidGlwbyI6IkNMSUVOVEUiLCJub21lIjoiTmlja29sYXMiLCJpYXQiOjE3NjIyOTQwMTcsImV4cCI6MTc2MjM4MDQxN30.dlt_4dLtjwwzCtBODAVBMSp6_3yznQ4qsvKewRizAYQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/usuarios",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"login\": \"nickolas.ng@outlook.com\",\r\n  \"senha\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cliente",
+			"item": [
+				{
+					"name": "Favoritar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwidGlwbyI6IkNMSUVOVEUiLCJub21lIjoiTmlja29sYXMiLCJpYXQiOjE3NjIyOTg5ODcsImV4cCI6MTc2MjM4NTM4N30.-f-4xsWLJ_jnZ81F8p7PUIhBKfnQ8RTjxbmDVFV8mRo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"login\": \"string\",\r\n  \"senha\": \"string\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/clientes/favoritar/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"favoritar",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Desfavoritar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"login\": \"string\",\r\n  \"senha\": \"string\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/clientes/desfavoritar/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"desfavoritar",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Avaliar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwidGlwbyI6IkNMSUVOVEUiLCJub21lIjoiTmlja29sYXMiLCJpYXQiOjE3NjIzMDAzNzEsImV4cCI6MTc2MjM4Njc3MX0.B-sr4TmFHgV540C0JU-l19A_3O5GIN2Qwbq6X55jVWY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nota\": 5,\r\n    \"comentario\": \"Excelente!\",\r\n    \"atmosfera\": \"aconchegante\",\r\n    \"preco\": \"razoavel\",\r\n    \"recomendacao\": true,\r\n    \"tags\": [\"familia\", \"romantico\"],\r\n    \"fotos\": [\"foto1.jpg\", \"foto2.jpg\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/clientes/avaliar/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"avaliar",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Favoritos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwidGlwbyI6IkNMSUVOVEUiLCJub21lIjoiTmlja29sYXMiLCJpYXQiOjE3NjIyOTg5ODcsImV4cCI6MTc2MjM4NTM4N30.-f-4xsWLJ_jnZ81F8p7PUIhBKfnQ8RTjxbmDVFV8mRo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/clientes/favoritos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"favoritos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Avaliacoes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/clientes/avaliacoes/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"avaliacoes",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DonoRestaurante",
+			"item": [
+				{
+					"name": "CadastrarRestaurante",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwidGlwbyI6IkRPTk8iLCJub21lIjoiSGVsbGVuIiwiaWF0IjoxNzYyMjk3NjM4LCJleHAiOjE3NjIzODQwMzh9.ZZ0YWYWpFNbfl5MStVVuDyWxM7EwVh3qnhobLAuPWiI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Basilius\",\r\n  \"descricao\": \"Hamburgueria\",\r\n  \"dataInauguracao\": \"2025-11-04\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/dono-restaurante/cadastrar-restaurante",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dono-restaurante",
+								"cadastrar-restaurante"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Restaurantes do Dono",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwidGlwbyI6IkNMSUVOVEUiLCJub21lIjoiTmlja29sYXMiLCJpYXQiOjE3NjIyOTg5ODcsImV4cCI6MTc2MjM4NTM4N30.-f-4xsWLJ_jnZ81F8p7PUIhBKfnQ8RTjxbmDVFV8mRo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"login\": \"string\",\r\n  \"senha\": \"string\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/dono-restaurante/listar-restaurantes",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dono-restaurante",
+								"listar-restaurantes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Restaurante",
+			"item": [
+				{
+					"name": "Listar Restaurantes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"login\": \"nickolas.ng@outlook.com\",\r\n  \"senha\": \"12345\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/restaurante",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurante"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Por Restaurante",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/restaurante/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurante",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
